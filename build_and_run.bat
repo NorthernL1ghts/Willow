@@ -59,7 +59,7 @@ exit /b 1
 cmake --build "%BLD%"
 if errorlevel 1 exit /b 1
 
-"%BLD%\wil.exe"
+"%BLD%\wil.exe" %*
 set "EC=%ERRORLEVEL%"
 echo.
 echo Exit code: %EC%
