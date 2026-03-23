@@ -1,0 +1,73 @@
+# --- Build outputs (primary: out-of-source tree) ---
+/build/
+/out/
+/cmake-build-*/
+cmake-build*/
+
+# CMake configure / install leftovers (in-source mistakes)
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+CTestTestfile.cmake
+_deps/
+/Makefile
+
+# Ninja (sometimes left in cwd)
+.ninja_deps
+.ninja_log
+
+# --- Compiled & link artifacts (anywhere in the tree) ---
+*.o
+*.obj
+*.a
+*.lib
+*.dll
+*.so
+*.dylib
+*.exe
+*.ilk
+*.pdb
+*.exp
+*.gcno
+*.gcda
+*.gcov
+
+# --- Debug / profiling ---
+*.dSYM/
+*.su
+*.idb
+*.sdf
+*.VC.db
+*.VC.opendb
+
+# --- Tooling & caches ---
+.cache/
+ccache/
+.clangd/
+compile_commands.json
+
+# CMake: local user presets (keep CMakePresets.json in repo if you add it)
+CMakeUserPresets.json
+
+# --- Editors & IDEs ---
+.idea/
+.vs/
+*.swp
+*.swo
+*~
+*.sublime-workspace
+# .vscode/
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+
+# --- Logs & temp ---
+*.log
+*.tmp
+*.temp
+*.bak
+*.orig
