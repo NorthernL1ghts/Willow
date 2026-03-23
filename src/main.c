@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 long file_size(FILE* file) {
     if (!file) { return 0; }
@@ -100,15 +101,33 @@ void print_error(Error err) {
     }
 }
 
-Error lex(char* source, char** begin, char** end) {
+const char* whitespace = " \r\n";
+const char* delimiters = " \r\n";
+
+/// Lex the next token from SOURCE, and point to it with BEG and END.
+Error lex(char* source, char** beg, char** end) {
     Error err = ok;
-    if (!source) {
+    if (!source || !beg || !end) {
         ERROR_PREP(err, ERROR_ARGUMENTS, "Can not lex empty source.");
         return err;
     }
+    *beg = source;
+    *beg += strspn(*beg, whitespace); // Skip whitespace.
+    *end = *beg;
+    *end += strcspn(*end, delimiters); // Find the next delimiter.
     return err;
 }
 
+Error parse_expr(char* source) {
+    char* beg = source;
+    char* end = source;
+    Error err = ok;
+    while ((err = lex(end, &beg, &end)).type == ERROR_NONE) {
+        if (end - beg == 0) { break; }
+        printf("lexed: %.*s\n", end - beg, beg);
+    }
+    return err;
+}
 
 int main(int argc, char** argv) {
     if (argc < 2) {
@@ -119,12 +138,12 @@ int main(int argc, char** argv) {
     char* path = argv[1];
     char* contents = file_contents(path);
     if (contents) {
-        printf("Contents of %s:\n-------------------\n%s\n-------------------\n",path, contents);
+        // printf("Contents of %s:\n-------------------\n%s\n-------------------\n",path, contents);
+ 
+        Error err = parse_expr(contents);
+        print_error(err);
         free(contents);
     }
-
-    Error err = lex(NULL, NULL, NULL);
-    print_error(err);
 
     return 0;
 }
