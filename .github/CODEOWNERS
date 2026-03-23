@@ -1,0 +1,8 @@
+# Code owners are automatically requested for review when someone opens a PR
+# that modifies files they own. Replace placeholders with real GitHub usernames
+# or teams (e.g. @org/team-name).
+#
+# Syntax: pattern @user1 @user2
+# Docs: https://docs.github.com/repositories/managing-your-repositorys-settings-features/customizing-your-repository/about-code-owners
+
+# * @NorthernL1ghts
