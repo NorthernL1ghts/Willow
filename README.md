@@ -19,5 +19,16 @@
 
 ## Overview
 
-Willow is implemented in **C** and is developed for **Windows** and **Linux** on **x86_64** (64-bit Intel/AMD). Other platforms and architectures are out of scope for now.
+Willow is a small language project: the goal is to **build a compiler** in **C** for **Windows** and **Linux** on **x86_64**. There is no big roadmap yet—it is an experiment because it sounds like a good time.
 
+A sample program that is intended to be **valid Willow** once the toolchain exists lives in **[`Examples/Example.wil`](Examples/Example.wil)**.
+
+---
+
+## Community
+
+| | |
+| :-- | :-- |
+| **Contributing** | [.github/CONTRIBUTING.md](.github/CONTRIBUTING.md) |
+| **Code of conduct** | [.github/CODE_OF_CONDUCT.md](.github/CODE_OF_CONDUCT.md) |
+| **Security** | [.github/SECURITY.md](.github/SECURITY.md) |
