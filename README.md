@@ -25,10 +25,31 @@ A sample program that is intended to be **valid Willow** once the toolchain exis
 
 ---
 
-## Community
+## Usage
 
-| | |
-| :-- | :-- |
-| **Contributing** | [.github/CONTRIBUTING.md](.github/CONTRIBUTING.md) |
-| **Code of conduct** | [.github/CODE_OF_CONDUCT.md](.github/CODE_OF_CONDUCT.md) |
-| **Security** | [.github/SECURITY.md](.github/SECURITY.md) |
+Run the executable from a shell. Pass a single argument: the path to a Willow source file.
+
+---
+
+## Building
+
+**Prerequisites**
+
+- [CMake](https://cmake.org/) 3.14 or newer
+- A C compiler—we develop and test with [GCC](https://gcc.gnu.org/) (GNU Compiler Collection), but any capable C toolchain should work
+
+**Steps**
+
+1. Configure a build directory:
+
+   ```bash
+   cmake -B build
+   ```
+
+2. Compile:
+
+   ```bash
+   cmake --build build
+   ```
+
+The resulting executable will be produced under the build tree (exact path depends on your generator and platform).
