@@ -3,7 +3,7 @@ a := 0
 
 b : integer
 b := 0
-
+ 
 defun foo (a:integer, b:integer):integer {
 
 }
