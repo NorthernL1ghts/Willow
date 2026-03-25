@@ -56,6 +56,7 @@ typedef struct Error {
         ERROR_GENERIC,
         ERROR_SYNTAX,
         ERROR_TODO,
+        ERROR_MAX,
     } type;
     char *msg;
 } Error;
@@ -74,6 +75,7 @@ void print_error(Error err) {
         return;
     }
     printf("ERROR: ");
+    assert(ERROR_MAX == 6);
     switch (err.type) {
     default:
         printf("Unknown error type: ");
@@ -104,31 +106,79 @@ void print_error(Error err) {
 const char* whitespace = " \r\n";
 const char* delimiters = " \r\n,():";
 
+typedef struct Token {
+    char* beginning;
+    char* end;
+    struct Token* next;
+} Token;
+
 /// Lex the next token from SOURCE, and point to it with BEG and END.
-Error lex(char* source, char** beg, char** end) {
+Error lex(char* source, Token* token) {
     Error err = ok;
-    if (!source || !beg || !end) {
+    if (!source || !token) {
         ERROR_PREP(err, ERROR_ARGUMENTS, "Can not lex empty source.");
         return err;
     }
-    *beg = source;
-    *beg += strspn(*beg, whitespace); // Skip whitespace.
-    *end = *beg;
-    if (**end == '\0') { return err; }
-    *end += strcspn(*end, delimiters); // Find the next delimiter.
-    if (*end == *beg) {
-        *end += 1;
+    token->beginning = source;
+    token->beginning += strspn(token->beginning, whitespace); // Skip whitespace.
+    token->end = token->beginning;
+    if (*token->end == '\0') { return err; }
+    token->end += strcspn(token->end, delimiters); // Find the next delimiter.
+    if (token->end == token->beginning) {
+        token->end += 1;
     }
     return err;
 }
 
-Error parse_expr(char* source) {
-    char* beg = source;
-    char* end = source;
+// TODO:
+// '-- API to create new node.
+// '-- API to add node as child.
+typedef long long integer_t;
+typedef struct Node {
+    enum NodeType {
+        NODE_TYPE_NONE,
+        NODE_TYPE_INTEGER,
+        NODE_TYPE_PROGRAM,
+        NODE_TYPE_MAX,
+    } type;
+    union NodeValue {
+        integer_t integer;
+    } value;
+    struct Node** children;
+} Node;
+
+/* Node Predicates */
+#define nonep(node) ((node).type == NODE_TYPE_NONE)
+#define integerp(node) ((node).type == NODE_TYPE_INTEGER)
+
+// TODO:
+// '-- API to create new Binding
+// '-- API to add Binding to Environment.
+typedef struct Binding {
+    char* id;
+    Node* value;
+    struct Binding* next;
+} Binding;
+
+// TODO: API to create new Environment.
+typedef struct Environment {
+    struct Environment* parent;
+    Binding* bind;    
+} Environment;
+
+void environment_set() {
+
+}
+
+Error parse_expr(char* source, Node* result) {
+    Token token;
+    token.next = NULL;
+    token.beginning = source;
+    token.end = source;
     Error err = ok;
-    while ((err = lex(end, &beg, &end)).type == ERROR_NONE) {
-        if (end - beg == 0) { break; }
-        printf("lexed: %.*s\n", end - beg, beg);
+    while ((err = lex(token.end, &token)).type == ERROR_NONE) {
+        if (token.end - token.beginning == 0) { break; }
+        printf("lexed: %.*s\n", token.end - token.beginning, token.beginning);
     }
     return err;
 }
@@ -142,9 +192,10 @@ int main(int argc, char** argv) {
     char* path = argv[1];
     char* contents = file_contents(path);
     if (contents) {
-        // printf("Contents of %s:\n-------------------\n%s\n-------------------\n",path, contents);
+        // printf("Contents of %s:\n-------------------\n%s\n-------------------\n", path, contents);
  
-        Error err = parse_expr(contents);
+        Node expression;
+        Error err = parse_expr(contents, &expression);
         print_error(err);
         free(contents);
     }
