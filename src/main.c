@@ -112,6 +112,27 @@ typedef struct Token {
     struct Token* next;
 } Token;
 
+Token* token_create() {
+    Token* token = malloc(sizeof(Token));
+    assert(token && "Could not allocate memory for token");
+    memset(token, 0, sizeof(Token));
+    return token;
+}
+
+void print_token(Token* root) {
+    size_t count = 1;
+    while (root) {
+        if (count > 10000) { break; } // FIXME: Remove this limit.
+        printf("Token %zu: ", count);
+        if (root->beginning && root->end) {
+            printf("%.*s", root->end - root->beginning, root->beginning);
+        }
+        putchar('\n');
+        root = root->next;
+        count++;
+    }
+}
+
 /// Lex the next token from SOURCE, and point to it with BEG and END.
 Error lex(char* source, Token* token) {
     Error err = ok;
@@ -171,15 +192,25 @@ void environment_set() {
 }
 
 Error parse_expr(char* source, Node* result) {
-    Token token;
-    token.next = NULL;
-    token.beginning = source;
-    token.end = source;
+    Token* tokens = NULL;
+    Token current_token;
+    current_token.next = NULL;
+    current_token.beginning = source;
+    current_token.end = source;
     Error err = ok;
-    while ((err = lex(token.end, &token)).type == ERROR_NONE) {
-        if (token.end - token.beginning == 0) { break; }
-        printf("lexed: %.*s\n", token.end - token.beginning, token.beginning);
+    while ((err = lex(current_token.end, &current_token)).type == ERROR_NONE) {
+        if (current_token.end - current_token.beginning == 0) { break; }
+
+        Token* rest_of_tokens = tokens;
+        tokens = token_create();
+        memcpy(tokens, &current_token, sizeof(Token));
+        tokens->next = rest_of_tokens;
+
+        printf("lexed: %.*s\n", current_token.end - current_token.beginning, current_token.beginning);
     }
+
+    print_token(tokens);
+
     return err;
 }
 
